@@ -1,0 +1,64 @@
+**PROCEDURE: main
+**BEGIN: RTL Statements
+    load:       v0 <- b_        ;; Loading variable b_ into register
+    load:       t1 <- c_        ;; Loading variable c_ into register
+    add:        t0 <- v0 , t1
+    store:      a_ <- t0
+
+  Label1:
+    load:       v0 <- a_        ;; Loading variable a_ into register
+    load:       t1 <- d_        ;; Loading variable d_ into register
+    sgt:        t0 <- v0 , t1
+    not:        v0 <- t0
+    bgtz:       v0 , Label2
+    load:       v0 <- a_        ;; Loading variable a_ into register
+    iLoad:      t1 <- 2         ;; Loading integer number 2
+    add:        t0 <- v0 , t1
+    store:      a_ <- t0
+    goto:       Label1
+
+  Label2:
+    load_addr:  v0 <- _str_1    ;; String = "hello"
+    store:      x_ <- v0
+    load:       v0 <- x_        ;; Loading variable x_ into register
+    push:       v0                  ;; Push parameter onto stack
+    v1 = call p_
+    pop                             ;; Pop parameter x_ from stack
+    move:       v0 <- v1
+    store:      z_ <- v0
+**END: RTL Statements
+**PROCEDURE: p_
+**BEGIN: RTL Statements
+    iLoad:      v0 <- 2         ;; Loading integer number 2
+    store:      a_ <- v0
+    load_addr:  v0 <- _str_0    ;; String = "Hello"
+    store:      x_ <- v0
+    iLoad:      v0 <- 1         ;; Loading 1 in v0 to indicate syscall to print integer value
+    load:       a0 <- b_        ;; Moving the value to be printed into register a0
+    write                       ;; This is where syscall will be made
+    load:       v0 <- a_        ;; Loading variable a_ into register
+    load:       t1 <- c_        ;; Loading variable c_ into register
+    sgt:        t0 <- v0 , t1
+    not:        v0 <- t0
+    bgtz:       v0 , Label4
+    iLoad:      v0 <- 1         ;; Loading 1 in v0 to indicate syscall to print integer value
+    load:       a0 <- b_        ;; Moving the value to be printed into register a0
+    write                       ;; This is where syscall will be made
+    goto:       Label3
+
+  Label4:
+    iLoad:      v0 <- 1         ;; Loading 1 in v0 to indicate syscall to print integer value
+    load:       a0 <- a_        ;; Moving the value to be printed into register a0
+    write                       ;; This is where syscall will be made
+
+  Label3:
+    load:       v0 <- y_        ;; Loading variable y_ into register
+    store:      x_ <- v0
+    load:       v0 <- x_        ;; Loading variable x_ into register
+    store:      stemp0 <- v0
+    goto:       Label0
+
+Label0:
+    load:       v1 <- stemp0    ;; Moving the value to be printed into register v1
+    return      v1
+**END: RTL Statements

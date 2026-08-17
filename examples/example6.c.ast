@@ -1,0 +1,45 @@
+**PROCEDURE: main
+	Return Type: <void>
+	Formal Parameters:
+**BEGIN: Abstract Syntax Tree
+                  Asgn:
+                          LHS (Name: text_<int>)
+                          RHS (Num: 0<int>)
+                  Asgn:
+                          LHS (Name: loop_<int>)
+                          RHS (Num: 10<int>)
+                  While:
+                          Condition (
+                                  Condition: GT<bool>
+                                          L_Opd (Name: loop_<int>)
+                                          R_Opd (Num: 1<int>))
+                          Body (
+                                  Asgn:
+                                          LHS (Name: loop_<int>)
+                                          RHS (
+                                                  Arith: Minus<int>
+                                                          L_Opd (Name: loop_<int>)
+                                                          R_Opd (Num: 1<int>))
+                                  If:
+                                          Condition (
+                                                  Condition: EQ<bool>
+                                                          L_Opd (Name: loop_<int>)
+                                                          R_Opd (Num: 0<int>))
+                                          Then (
+                                                  Write: Name: loop_<int>)
+                                          Else (
+                                                  Write: Name: text_<int>))
+                  Do:
+                          Body (
+                                  Asgn:
+                                          LHS (Name: loop_<int>)
+                                          RHS (
+                                                  Arith: Plus<int>
+                                                          L_Opd (Name: loop_<int>)
+                                                          R_Opd (Num: 1<int>)))
+                          While Condition (
+                                  Condition: LT<bool>
+                                          L_Opd (Name: loop_<int>)
+                                          R_Opd (Num: 10<int>))
+                  Write: Name: loop_<int>
+**END: Abstract Syntax Tree

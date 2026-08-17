@@ -1,0 +1,83 @@
+
+    .data
+_str_0:	.asciiz "Hi"
+    .text			# The .text assembler directive indicates
+    .globl main			# The following is the code (as opposed to data)
+main:				# .globl makes main know to the outside of the program.
+# Prologue begins
+    sw $ra, 0($sp)			# Save the return address
+    sw $fp, -4($sp)			# Save the frame pointer
+    sub $fp, $sp, 4			# Update the frame pointer
+    sub $sp, $sp, 52			# Make space for the locals
+# Prologue ends
+
+	li $v0, 2			# Source:2
+	sw $v0, -12($fp)			# Dest: $v0
+	li $v0, 3			# Source:3
+	sw $v0, -16($fp)			# Dest: $v0
+	la $v0, _str_0			# String = "Hi"
+	sw $v0, -32($fp)			# Dest: $v0
+	li.d $f2, 3.50			# Source:3.500000
+	s.d $f2, -40($fp)			# Dest: $f2
+	li $v0, 1			# Loading 1 in v0 to indicate syscall to print integer value
+	li $a0, 5			# Moving the value to be printed into register a0
+	syscall
+	li $v0, 3			# Loading 3 in v0 to indicate syscall to print double value
+	li.d $f12, 5.60			# Loading float number 5.600000
+	syscall
+	li $v0, 4			# Loading 4 in v0 to indicate syscall to print string value
+	la $a0, _str_0			# String = "Hi"
+	syscall
+	li $v0, 1			# Loading 1 in v0 to indicate syscall to print integer value
+	lw $a0, -4($fp)			# Source:x_
+	syscall
+	li $v0, 5			# Loading 5 in v0 to indicate syscall to read integer value
+	syscall
+	sw $v0, -16($fp)			# Dest: $v0
+	lw $v0, -4($fp)			# Source:x_
+	lw $t1, -16($fp)			# Source:b_
+	slt $t0, $v0, $t1	# Result: $t0, Opd1: $v0, Opd2:$t1
+	lw $v0, -16($fp)			# Source:b_
+	lw $t2, -12($fp)			# Source:c_
+	sgt $t1, $v0, $t2	# Result: $t1, Opd1: $v0, Opd2:$t2
+	lw $v0, -12($fp)			# Source:c_
+	lw $t3, -16($fp)			# Source:b_
+	seq $t2, $v0, $t3	# Result: $t2, Opd1: $v0, Opd2:$t3
+	xori $v0, $t2, 1	# Result: $v0, Opd1: $t2
+	and $t2, $t1, $v0	# Result: $t2, Opd1: $t1, Opd2:$v0
+	or $v0, $t0, $t2	# Result: $v0, Opd1: $t0, Opd2:$t2
+	xori $t0, $v0, 1	# Result: $t0, Opd1: $v0
+	bgtz $t0, Label0
+	lw $v0, -12($fp)			# Source:c_
+	neg $t0, $v0
+	lw $t1, -4($fp)			# Source:x_
+	mul $v0, $t0, $t1	# Result: $v0, Opd1: $t0, Opd2:$t1
+	lw $t1, -4($fp)			# Source:x_
+	add $t0, $v0, $t1	# Result: $t0, Opd1: $v0, Opd2:$t1
+	lw $t1, -4($fp)			# Source:x_
+	add $v0, $t0, $t1	# Result: $v0, Opd1: $t0, Opd2:$t1
+	lw $t0, -12($fp)			# Source:c_
+	neg $t1, $t0
+	lw $t0, -16($fp)			# Source:b_
+	add $t2, $t0, $t1	# Result: $t2, Opd1: $t0, Opd2:$t1
+	lw $t0, -12($fp)			# Source:c_
+	div $t1, $t0, $t2
+	sub $t0, $v0, $t1	# Result: $t0, Opd1: $v0, Opd2:$t1
+	sw $t0, -44($fp)			# Dest: $t0
+	j Label1
+Label0:
+	lw $v0, -12($fp)			# Source:c_
+	li $t1, 20			# Source:20
+	mul $t0, $v0, $t1	# Result: $t0, Opd1: $v0, Opd2:$t1
+	li $t1, 30			# Source:30
+	sub $v0, $t0, $t1	# Result: $v0, Opd1: $t0, Opd2:$t1
+	sw $v0, -44($fp)			# Dest: $v0
+Label1:
+	lw $v0, -44($fp)			# Source: stemp0
+	sw $v0, -4($fp)			# Dest: $v0
+epilogue_main:
+    add $sp, $sp, 52			# Increment stack pointer for local variables
+    lw $fp, -4($sp)			# Set $fp to $sp-4
+    lw $ra, 0($sp)			# Save ra
+    jr $ra				# Jump back to the called procedure
+# Epilogue Ends

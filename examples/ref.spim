@@ -1,0 +1,178 @@
+
+    .data
+i1_:    .word 0
+i2_:    .word 0
+f1_:    .double 0.0
+f2_:    .double 0.0
+    .text           # The .text assembler directive indicates
+    .globl func1_   # The following is the code (as opposed to data)
+func1_:             # .globl makes main know to the outside of the program.
+# Prologue begins
+    sw $ra, 0($sp)      # Save the return address
+    sw $fp, -4($sp)     # Save the frame pointer
+    sub $fp, $sp, 4     # Update the frame pointer
+    sub $sp, $sp, 8     # Make space for the locals
+# Prologue ends
+
+    li $v0, 5           # Source:5
+    sw $v0, i2_         # Dest: $v0
+    li.d $f2, 5.00      # Source:5.000000
+    s.d $f2, f2_        # Dest: $f2
+epilogue_func1_:
+    add $sp, $sp, 8     # Increment stack pointer for local variables
+    lw $fp, -4($sp)     # Set $fp to $sp-4
+    lw $ra, 0($sp)      # Save ra
+    jr $ra              # Jump back to the called procedure
+# Epilogue Ends
+
+    .text           # The .text assembler directive indicates
+    .globl func2_   # The following is the code (as opposed to data)
+func2_:             # .globl makes main know to the outside of the program.
+# Prologue begins
+    sw $ra, 0($sp)      # Save the return address
+    sw $fp, -4($sp)     # Save the frame pointer
+    sub $fp, $sp, 4     # Update the frame pointer
+    sub $sp, $sp, 12    # Make space for the locals
+# Prologue ends
+
+    lw $v0, 8($fp)      # Source:a_
+    li $t1, 10          # Source:10
+    add $t0, $v0, $t1   # Result: $t0, Opd1: $v0, Opd2:$t1
+    sw $t0, 8($fp)      # Dest: $t0
+    li $v0, 5           # Source:5
+    sw $v0, 20($fp)     # Dest: $v0
+    lw $v0, 8($fp)      # Source:a_
+    lw $t1, 20($fp)     # Source:i1_
+    add $t0, $v0, $t1   # Result: $t0, Opd1: $v0, Opd2:$t1
+    lw $t1, i2_         # Source:i2_
+    add $v0, $t0, $t1   # Result: $v0, Opd1: $t0, Opd2:$t1
+    li $t1, 2           # Source:2
+    add $t0, $v0, $t1   # Result: $t0, Opd1: $v0, Opd2:$t1
+    sw $t0, -4($fp)     # Dest: $t0
+    j Label0
+Label0:
+    lw $v1, -4($fp)     # Moving the value to be printed into register a0
+    j epilogue_func2_
+epilogue_func2_:
+    add $sp, $sp, 12    # Increment stack pointer for local variables
+    lw $fp, -4($sp)     # Set $fp to $sp-4
+    lw $ra, 0($sp)      # Save ra
+    jr $ra              # Jump back to the called procedure
+# Epilogue Ends
+
+    .text           # The .text assembler directive indicates
+    .globl func3_   # The following is the code (as opposed to data)
+func3_:             # .globl makes main know to the outside of the program.
+# Prologue begins
+    sw $ra, 0($sp)      # Save the return address
+    sw $fp, -4($sp)     # Save the frame pointer
+    sub $fp, $sp, 4     # Update the frame pointer
+    sub $sp, $sp, 16    # Make space for the locals
+# Prologue ends
+
+    l.d $f2, 12($fp)    # Source:b_
+    l.d $f6, f2_        # Source:f2_
+    add.d $f4, $f2, $f6 # Result: $f4, Opd1: $f2, Opd2:$f6
+    s.d $f4, 12($fp)    # Dest: $f4
+    l.d $f2, 20($fp)    # Source:c_
+    li.d $f6, 10.50     # Source:10.500000
+    add.d $f4, $f2, $f6 # Result: $f4, Opd1: $f2, Opd2:$f6
+    s.d $f4, 20($fp)    # Dest: $f4
+    l.d $f2, 12($fp)    # Source:b_
+    l.d $f6, 20($fp)    # Source:c_
+    add.d $f4, $f2, $f6 # Result: $f4, Opd1: $f2, Opd2:$f6
+    s.d $f4, -8($fp)    # Dest: $f4
+    j Label1
+Label1:
+    l.d $f0, -8($fp)    # Moving the value to be printed into register a0
+    j epilogue_func3_
+epilogue_func3_:
+    add $sp, $sp, 16    # Increment stack pointer for local variables
+    lw $fp, -4($sp)     # Set $fp to $sp-4
+    lw $ra, 0($sp)      # Save ra
+    jr $ra              # Jump back to the called procedure
+# Epilogue Ends
+
+    .text           # The .text assembler directive indicates
+    .globl func4_   # The following is the code (as opposed to data)
+func4_:             # .globl makes main know to the outside of the program.
+# Prologue begins
+    sw $ra, 0($sp)      # Save the return address
+    sw $fp, -4($sp)     # Save the frame pointer
+    sub $fp, $sp, 4     # Update the frame pointer
+    sub $sp, $sp, 12    # Make space for the locals
+# Prologue ends
+
+    li $v0, 4           # Source:4
+    sw $v0, i1_         # Dest: $v0
+    lw $v0, i1_         # Source:i1_
+    lw $t1, i1_         # Source:i1_
+    add $t0, $v0, $t1   # Result: $t0, Opd1: $v0, Opd2:$t1
+    sw $t0, -4($fp)     # Dest: $t0
+    j Label2
+Label2:
+    lw $v1, -4($fp)     # Moving the value to be printed into register a0
+    j epilogue_func4_
+epilogue_func4_:
+    add $sp, $sp, 12    # Increment stack pointer for local variables
+    lw $fp, -4($sp)     # Set $fp to $sp-4
+    lw $ra, 0($sp)      # Save ra
+    jr $ra              # Jump back to the called procedure
+# Epilogue Ends
+
+    .text           # The .text assembler directive indicates
+    .globl main     # The following is the code (as opposed to data)
+main:               # .globl makes main know to the outside of the program.
+# Prologue begins
+    sw $ra, 0($sp)      # Save the return address
+    sw $fp, -4($sp)     # Save the frame pointer
+    sub $fp, $sp, 4     # Update the frame pointer
+    sub $sp, $sp, 8     # Make space for the locals
+# Prologue ends
+
+    jal func1_
+    jal func4_
+    move $v0, $v1       # store function call return in $v1 so that another function call can be made
+    sw $v0, i2_         # Dest: $v0
+    lw $v0, i2_         # Source:i2_
+    sw $v0, 0($sp)      # store formal parameter at sp
+    sub $sp, $sp, 4     # decrement the stack pointer by 4
+    l.d $f2, f2_        # Source:f2_
+    s.d $f2, -4($sp)    # store formal parameter at sp
+    sub $sp, $sp, 8     # decrement the stack pointer by 8
+    lw $v0, i1_         # Source:i1_
+    sw $v0, 0($sp)      # store formal parameter at sp
+    sub $sp, $sp, 4     # decrement the stack pointer by 4
+    jal func2_
+    add $sp, $sp, 4     # add the stack pointer by 4
+    add $sp, $sp, 8     # increment the stack pointer by 8
+    add $sp, $sp, 4     # add the stack pointer by 4
+    move $v0, $v1       # store function call return in $v1 so that another function call can be made
+    sw $v0, i2_         # Dest: $v0
+    l.d $f2, f2_        # Source:f2_
+    s.d $f2, -4($sp)    # store formal parameter at sp
+    sub $sp, $sp, 8     # decrement the stack pointer by 8
+    l.d $f2, f1_        # Source:f1_
+    s.d $f2, -4($sp)    # store formal parameter at sp
+    sub $sp, $sp, 8     # decrement the stack pointer by 8
+    lw $v0, i1_         # Source:i1_
+    sw $v0, 0($sp)      # store formal parameter at sp
+    sub $sp, $sp, 4     # decrement the stack pointer by 4
+    jal func3_
+    add $sp, $sp, 4     # add the stack pointer by 4
+    add $sp, $sp, 8     # increment the stack pointer by 8
+    add $sp, $sp, 8     # increment the stack pointer by 8
+    mov.d $f2, $f0      # store function call return in $f0 so that another function call can be made
+    s.d $f2, f2_        # Dest: $f2
+    li $v0, 3           # Loading 3 in v0 to indicate syscall to print double value
+    l.d $f12, f1_       # Moving the value to be printed into register a0
+    syscall
+    li $v0, 3           # Loading 3 in v0 to indicate syscall to print double value
+    l.d $f12, f2_       # Moving the value to be printed into register a0
+    syscall
+epilogue_main:
+    add $sp, $sp, 8     # Increment stack pointer for local variables
+    lw $fp, -4($sp)     # Set $fp to $sp-4
+    lw $ra, 0($sp)      # Save ra
+    jr $ra              # Jump back to the called procedure
+# Epilogue Ends

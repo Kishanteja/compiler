@@ -1,0 +1,72 @@
+**PROCEDURE: main
+	Return Type: <void>
+	Formal Parameters:
+**BEGIN: Abstract Syntax Tree
+                  Asgn:
+                          LHS (Name: c_<int>)
+                          RHS (Num: 2<int>)
+                  Asgn:
+                          LHS (Name: b_<int>)
+                          RHS (Num: 3<int>)
+                  Asgn:
+                          LHS (Name: s_<string>)
+                          RHS (Str: "Hi"<string>)
+                  Asgn:
+                          LHS (Name: z_<float>)
+                          RHS (Num: 3.50<float>)
+                  Write: Num: 5<int>
+                  Write: Num: 5.60<float>
+                  Write: Str: "Hi"<string>
+                  Write: Name: x_<int>
+                  Read: Name : b_<int>
+                  Asgn:
+                          LHS (Name: x_<int>)
+                          RHS (
+                                  Condition: OR<bool>
+                                          L_Opd (
+                                                  Condition: LT<bool>
+                                                          L_Opd (Name: x_<int>)
+                                                          R_Opd (Name: b_<int>))
+                                          R_Opd (
+                                                  Condition: AND<bool>
+                                                          L_Opd (
+                                                                  Condition: GT<bool>
+                                                                          L_Opd (Name: b_<int>)
+                                                                          R_Opd (Name: c_<int>))
+                                                          R_Opd (
+                                                                  Condition: NOT<bool>
+                                                                          Opd (
+                                                                                  Condition: EQ<bool>
+                                                                                          L_Opd (Name: c_<int>)
+                                                                                          R_Opd (Name: b_<int>))))
+                                  True_Part (
+                                          Arith: Minus<int>
+                                                  L_Opd (
+                                                          Arith: Plus<int>
+                                                                  L_Opd (
+                                                                          Arith: Plus<int>
+                                                                                  L_Opd (
+                                                                                          Arith: Mult<int>
+                                                                                                  L_Opd (
+                                                                                                          Arith: Uminus<int>
+                                                                                                                  Opd (Name: c_<int>))
+                                                                                                  R_Opd (Name: x_<int>))
+                                                                                  R_Opd (Name: x_<int>))
+                                                                  R_Opd (Name: x_<int>))
+                                                  R_Opd (
+                                                          Arith: Div<int>
+                                                                  L_Opd (Name: c_<int>)
+                                                                  R_Opd (
+                                                                          Arith: Plus<int>
+                                                                                  L_Opd (Name: b_<int>)
+                                                                                  R_Opd (
+                                                                                          Arith: Uminus<int>
+                                                                                                  Opd (Name: c_<int>)))))
+                                  False_Part (
+                                          Arith: Minus<int>
+                                                  L_Opd (
+                                                          Arith: Mult<int>
+                                                                  L_Opd (Name: c_<int>)
+                                                                  R_Opd (Num: 20<int>))
+                                                  R_Opd (Num: 30<int>)))
+**END: Abstract Syntax Tree

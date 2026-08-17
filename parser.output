@@ -1,0 +1,2263 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: global_decl_statement_list func_def_list
+    2        | func_def_list
+
+    3 global_decl_statement_list: global_decl_statement_list func_decl
+    4                           | global_decl_statement_list var_decl_stmt
+    5                           | var_decl_stmt
+    6                           | func_decl
+
+    7 func_def_list: func_def_list func_def
+    8              | func_def
+
+    9 func_header: named_type NAME
+
+   10 func_decl: func_header LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET SEMICOLON
+   11          | func_header LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET SEMICOLON
+
+   12 func_def: func_header LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET compound_statement
+   13         | func_header LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET compound_statement
+
+   14 formal_param_list: formal_param_list COMMA formal_param
+   15                  | formal_param
+
+   16 formal_param: param_type NAME
+
+   17 param_type: INTEGER
+   18           | FLOAT
+   19           | STRING
+   20           | BOOL
+
+   21 var_decl_stmt: named_type var_decl_item_list SEMICOLON
+
+   22 var_decl_item_list: var_decl_item_list COMMA NAME
+   23                   | NAME
+
+   24 named_type: INTEGER
+   25           | FLOAT
+   26           | STRING
+   27           | BOOL
+   28           | VOID
+
+   29 compound_statement: LEFT_CURLY_BRACKET block_items RIGHT_CURLY_BRACKET
+
+   30 block_items: block_decls block_stmts
+   31            | block_decls
+   32            | block_stmts
+   33            | ε
+
+   34 block_decls: block_decls var_decl_stmt
+   35            | var_decl_stmt
+
+   36 block_stmts: block_stmts statement
+   37            | statement
+
+   38 stmt_block: LEFT_CURLY_BRACKET block_stmts RIGHT_CURLY_BRACKET
+   39           | LEFT_CURLY_BRACKET RIGHT_CURLY_BRACKET
+
+   40 statement: assignment_statement
+   41          | read_statement
+   42          | print_statement
+   43          | if_statement
+   44          | while_statement
+   45          | do_while_statement
+   46          | return_statement
+   47          | call_statement
+   48          | stmt_block
+
+   49 func_call: NAME LEFT_ROUND_BRACKET actual_arg_list RIGHT_ROUND_BRACKET
+
+   50 actual_arg_list: non_empty_arg_list
+   51                | ε
+
+   52 non_empty_arg_list: non_empty_arg_list COMMA expression
+   53                   | expression
+
+   54 call_statement: func_call SEMICOLON
+
+   55 return_statement: RETURN expression SEMICOLON
+   56                 | RETURN SEMICOLON
+
+   57 read_statement: READ NAME SEMICOLON
+
+   58 print_statement: WRITE expression SEMICOLON
+
+   59 assignment_statement: NAME ASSIGN_OP expression SEMICOLON
+
+   60 if_statement: IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement
+   61             | IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement ELSE statement
+
+   62 while_statement: WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement
+
+   63 do_while_statement: DO statement WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET SEMICOLON
+
+   64 expression: conditional_expression
+
+   65 conditional_expression: logical_or_expression
+   66                       | logical_or_expression QUESTION_MARK expression COLON conditional_expression
+
+   67 logical_or_expression: logical_or_expression OR logical_and_expression
+   68                      | logical_and_expression
+
+   69 logical_and_expression: logical_and_expression AND not_expression
+   70                       | not_expression
+
+   71 not_expression: NOT not_expression
+   72               | equality_expression
+
+   73 equality_expression: equality_expression EQUAL relational_expression
+   74                    | equality_expression NOT_EQUAL relational_expression
+   75                    | relational_expression
+
+   76 relational_expression: relational_expression LESS additive_expression
+   77                      | relational_expression GREATER additive_expression
+   78                      | relational_expression GREATER_EQUAL additive_expression
+   79                      | relational_expression LESS_EQUAL additive_expression
+   80                      | additive_expression
+
+   81 additive_expression: additive_expression PLUS term
+   82                    | additive_expression MINUS term
+   83                    | term
+
+   84 term: term MUL factor
+   85     | term DIV factor
+   86     | factor
+
+   87 factor: func_call
+   88       | NAME
+   89       | INT_NUM
+   90       | FLOAT_NUM
+   91       | STR_CONST
+   92       | BOOL_CONST
+   93       | LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET
+   94       | MINUS factor
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    INTEGER (258) 17 24
+    FLOAT (259) 18 25
+    STRING (260) 19 26
+    VOID (261) 28
+    BOOL (262) 20 27
+    NAME <str> (263) 9 16 22 23 49 57 59 88
+    INT_NUM <str> (264) 89
+    FLOAT_NUM <str> (265) 90
+    STR_CONST <str> (266) 91
+    BOOL_CONST <str> (267) 92
+    READ (268) 57
+    WRITE (269) 58
+    RETURN (270) 55 56
+    ASSIGN_OP (271) 59
+    PLUS (272) 81
+    MINUS (273) 82 94
+    MUL (274) 84
+    DIV (275) 85
+    OR (276) 67
+    AND (277) 69
+    NOT (278) 71
+    EQUAL (279) 73
+    NOT_EQUAL (280) 74
+    GREATER (281) 77
+    GREATER_EQUAL (282) 78
+    LESS (283) 76
+    LESS_EQUAL (284) 79
+    QUESTION_MARK (285) 66
+    COLON (286) 66
+    SEMICOLON (287) 10 11 21 54 55 56 57 58 59 63
+    COMMA (288) 14 22 52
+    LEFT_ROUND_BRACKET (289) 10 11 12 13 49 60 61 62 63 93
+    RIGHT_ROUND_BRACKET (290) 10 11 12 13 49 60 61 62 63 93
+    LEFT_CURLY_BRACKET (291) 29 38 39
+    RIGHT_CURLY_BRACKET (292) 29 38 39
+    IF (293) 60 61
+    ELSE (294) 61
+    WHILE (295) 62 63
+    DO (296) 63
+    UMINUS (297)
+    LOWER_THAN_ELSE (298)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (44)
+        on left: 0
+    program <node> (45)
+        on left: 1 2
+        on right: 0
+    global_decl_statement_list (46)
+        on left: 3 4 5 6
+        on right: 1 3 4
+    func_def_list <node> (47)
+        on left: 7 8
+        on right: 1 2 7
+    func_header <node> (48)
+        on left: 9
+        on right: 10 11 12 13
+    func_decl (49)
+        on left: 10 11
+        on right: 3 6
+    func_def <node> (50)
+        on left: 12 13
+        on right: 7 8
+    formal_param_list (51)
+        on left: 14 15
+        on right: 10 12 14
+    formal_param (52)
+        on left: 16
+        on right: 14 15
+    param_type (53)
+        on left: 17 18 19 20
+        on right: 16
+    var_decl_stmt (54)
+        on left: 21
+        on right: 4 5 34 35
+    var_decl_item_list (55)
+        on left: 22 23
+        on right: 21 22
+    named_type (56)
+        on left: 24 25 26 27 28
+        on right: 9 21
+    compound_statement <node> (57)
+        on left: 29
+        on right: 12 13
+    block_items <node> (58)
+        on left: 30 31 32 33
+        on right: 29
+    block_decls (59)
+        on left: 34 35
+        on right: 30 31 34
+    block_stmts <node> (60)
+        on left: 36 37
+        on right: 30 32 36 38
+    stmt_block <node> (61)
+        on left: 38 39
+        on right: 48
+    statement <node> (62)
+        on left: 40 41 42 43 44 45 46 47 48
+        on right: 36 37 60 61 62 63
+    func_call <node> (63)
+        on left: 49
+        on right: 54 87
+    actual_arg_list <node> (64)
+        on left: 50 51
+        on right: 49
+    non_empty_arg_list <node> (65)
+        on left: 52 53
+        on right: 50 52
+    call_statement <node> (66)
+        on left: 54
+        on right: 47
+    return_statement <node> (67)
+        on left: 55 56
+        on right: 46
+    read_statement <node> (68)
+        on left: 57
+        on right: 41
+    print_statement <node> (69)
+        on left: 58
+        on right: 42
+    assignment_statement <node> (70)
+        on left: 59
+        on right: 40
+    if_statement <node> (71)
+        on left: 60 61
+        on right: 43
+    while_statement <node> (72)
+        on left: 62
+        on right: 44
+    do_while_statement <node> (73)
+        on left: 63
+        on right: 45
+    expression <node> (74)
+        on left: 64
+        on right: 52 53 55 58 59 60 61 62 63 66 93
+    conditional_expression <node> (75)
+        on left: 65 66
+        on right: 64 66
+    logical_or_expression <node> (76)
+        on left: 67 68
+        on right: 65 66 67
+    logical_and_expression <node> (77)
+        on left: 69 70
+        on right: 67 68 69
+    not_expression <node> (78)
+        on left: 71 72
+        on right: 69 70 71
+    equality_expression <node> (79)
+        on left: 73 74 75
+        on right: 72 73 74
+    relational_expression <node> (80)
+        on left: 76 77 78 79 80
+        on right: 73 74 75 76 77 78 79
+    additive_expression <node> (81)
+        on left: 81 82 83
+        on right: 76 77 78 79 80 81 82
+    term <node> (82)
+        on left: 84 85 86
+        on right: 81 82 83 84 85
+    factor <node> (83)
+        on left: 87 88 89 90 91 92 93 94
+        on right: 84 85 86 94
+
+
+State 0
+
+    0 $accept: • program $end
+
+    INTEGER  shift, and go to state 1
+    FLOAT    shift, and go to state 2
+    STRING   shift, and go to state 3
+    VOID     shift, and go to state 4
+    BOOL     shift, and go to state 5
+
+    program                     go to state 6
+    global_decl_statement_list  go to state 7
+    func_def_list               go to state 8
+    func_header                 go to state 9
+    func_decl                   go to state 10
+    func_def                    go to state 11
+    var_decl_stmt               go to state 12
+    named_type                  go to state 13
+
+
+State 1
+
+   24 named_type: INTEGER •
+
+    $default  reduce using rule 24 (named_type)
+
+
+State 2
+
+   25 named_type: FLOAT •
+
+    $default  reduce using rule 25 (named_type)
+
+
+State 3
+
+   26 named_type: STRING •
+
+    $default  reduce using rule 26 (named_type)
+
+
+State 4
+
+   28 named_type: VOID •
+
+    $default  reduce using rule 28 (named_type)
+
+
+State 5
+
+   27 named_type: BOOL •
+
+    $default  reduce using rule 27 (named_type)
+
+
+State 6
+
+    0 $accept: program • $end
+
+    $end  shift, and go to state 14
+
+
+State 7
+
+    1 program: global_decl_statement_list • func_def_list
+    3 global_decl_statement_list: global_decl_statement_list • func_decl
+    4                           | global_decl_statement_list • var_decl_stmt
+
+    INTEGER  shift, and go to state 1
+    FLOAT    shift, and go to state 2
+    STRING   shift, and go to state 3
+    VOID     shift, and go to state 4
+    BOOL     shift, and go to state 5
+
+    func_def_list  go to state 15
+    func_header    go to state 9
+    func_decl      go to state 16
+    func_def       go to state 11
+    var_decl_stmt  go to state 17
+    named_type     go to state 13
+
+
+State 8
+
+    2 program: func_def_list •
+    7 func_def_list: func_def_list • func_def
+
+    INTEGER  shift, and go to state 1
+    FLOAT    shift, and go to state 2
+    STRING   shift, and go to state 3
+    VOID     shift, and go to state 4
+    BOOL     shift, and go to state 5
+
+    $default  reduce using rule 2 (program)
+
+    func_header  go to state 18
+    func_def     go to state 19
+    named_type   go to state 20
+
+
+State 9
+
+   10 func_decl: func_header • LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET SEMICOLON
+   11          | func_header • LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET SEMICOLON
+   12 func_def: func_header • LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET compound_statement
+   13         | func_header • LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET compound_statement
+
+    LEFT_ROUND_BRACKET  shift, and go to state 21
+
+
+State 10
+
+    6 global_decl_statement_list: func_decl •
+
+    $default  reduce using rule 6 (global_decl_statement_list)
+
+
+State 11
+
+    8 func_def_list: func_def •
+
+    $default  reduce using rule 8 (func_def_list)
+
+
+State 12
+
+    5 global_decl_statement_list: var_decl_stmt •
+
+    $default  reduce using rule 5 (global_decl_statement_list)
+
+
+State 13
+
+    9 func_header: named_type • NAME
+   21 var_decl_stmt: named_type • var_decl_item_list SEMICOLON
+
+    NAME  shift, and go to state 22
+
+    var_decl_item_list  go to state 23
+
+
+State 14
+
+    0 $accept: program $end •
+
+    $default  accept
+
+
+State 15
+
+    1 program: global_decl_statement_list func_def_list •
+    7 func_def_list: func_def_list • func_def
+
+    INTEGER  shift, and go to state 1
+    FLOAT    shift, and go to state 2
+    STRING   shift, and go to state 3
+    VOID     shift, and go to state 4
+    BOOL     shift, and go to state 5
+
+    $default  reduce using rule 1 (program)
+
+    func_header  go to state 18
+    func_def     go to state 19
+    named_type   go to state 20
+
+
+State 16
+
+    3 global_decl_statement_list: global_decl_statement_list func_decl •
+
+    $default  reduce using rule 3 (global_decl_statement_list)
+
+
+State 17
+
+    4 global_decl_statement_list: global_decl_statement_list var_decl_stmt •
+
+    $default  reduce using rule 4 (global_decl_statement_list)
+
+
+State 18
+
+   12 func_def: func_header • LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET compound_statement
+   13         | func_header • LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET compound_statement
+
+    LEFT_ROUND_BRACKET  shift, and go to state 24
+
+
+State 19
+
+    7 func_def_list: func_def_list func_def •
+
+    $default  reduce using rule 7 (func_def_list)
+
+
+State 20
+
+    9 func_header: named_type • NAME
+
+    NAME  shift, and go to state 25
+
+
+State 21
+
+   10 func_decl: func_header LEFT_ROUND_BRACKET • formal_param_list RIGHT_ROUND_BRACKET SEMICOLON
+   11          | func_header LEFT_ROUND_BRACKET • RIGHT_ROUND_BRACKET SEMICOLON
+   12 func_def: func_header LEFT_ROUND_BRACKET • formal_param_list RIGHT_ROUND_BRACKET compound_statement
+   13         | func_header LEFT_ROUND_BRACKET • RIGHT_ROUND_BRACKET compound_statement
+
+    INTEGER              shift, and go to state 26
+    FLOAT                shift, and go to state 27
+    STRING               shift, and go to state 28
+    BOOL                 shift, and go to state 29
+    RIGHT_ROUND_BRACKET  shift, and go to state 30
+
+    formal_param_list  go to state 31
+    formal_param       go to state 32
+    param_type         go to state 33
+
+
+State 22
+
+    9 func_header: named_type NAME •
+   23 var_decl_item_list: NAME •
+
+    LEFT_ROUND_BRACKET  reduce using rule 9 (func_header)
+    $default            reduce using rule 23 (var_decl_item_list)
+
+
+State 23
+
+   21 var_decl_stmt: named_type var_decl_item_list • SEMICOLON
+   22 var_decl_item_list: var_decl_item_list • COMMA NAME
+
+    SEMICOLON  shift, and go to state 34
+    COMMA      shift, and go to state 35
+
+
+State 24
+
+   12 func_def: func_header LEFT_ROUND_BRACKET • formal_param_list RIGHT_ROUND_BRACKET compound_statement
+   13         | func_header LEFT_ROUND_BRACKET • RIGHT_ROUND_BRACKET compound_statement
+
+    INTEGER              shift, and go to state 26
+    FLOAT                shift, and go to state 27
+    STRING               shift, and go to state 28
+    BOOL                 shift, and go to state 29
+    RIGHT_ROUND_BRACKET  shift, and go to state 36
+
+    formal_param_list  go to state 37
+    formal_param       go to state 32
+    param_type         go to state 33
+
+
+State 25
+
+    9 func_header: named_type NAME •
+
+    $default  reduce using rule 9 (func_header)
+
+
+State 26
+
+   17 param_type: INTEGER •
+
+    $default  reduce using rule 17 (param_type)
+
+
+State 27
+
+   18 param_type: FLOAT •
+
+    $default  reduce using rule 18 (param_type)
+
+
+State 28
+
+   19 param_type: STRING •
+
+    $default  reduce using rule 19 (param_type)
+
+
+State 29
+
+   20 param_type: BOOL •
+
+    $default  reduce using rule 20 (param_type)
+
+
+State 30
+
+   11 func_decl: func_header LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET • SEMICOLON
+   13 func_def: func_header LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET • compound_statement
+
+    SEMICOLON           shift, and go to state 38
+    LEFT_CURLY_BRACKET  shift, and go to state 39
+
+    compound_statement  go to state 40
+
+
+State 31
+
+   10 func_decl: func_header LEFT_ROUND_BRACKET formal_param_list • RIGHT_ROUND_BRACKET SEMICOLON
+   12 func_def: func_header LEFT_ROUND_BRACKET formal_param_list • RIGHT_ROUND_BRACKET compound_statement
+   14 formal_param_list: formal_param_list • COMMA formal_param
+
+    COMMA                shift, and go to state 41
+    RIGHT_ROUND_BRACKET  shift, and go to state 42
+
+
+State 32
+
+   15 formal_param_list: formal_param •
+
+    $default  reduce using rule 15 (formal_param_list)
+
+
+State 33
+
+   16 formal_param: param_type • NAME
+
+    NAME  shift, and go to state 43
+
+
+State 34
+
+   21 var_decl_stmt: named_type var_decl_item_list SEMICOLON •
+
+    $default  reduce using rule 21 (var_decl_stmt)
+
+
+State 35
+
+   22 var_decl_item_list: var_decl_item_list COMMA • NAME
+
+    NAME  shift, and go to state 44
+
+
+State 36
+
+   13 func_def: func_header LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET • compound_statement
+
+    LEFT_CURLY_BRACKET  shift, and go to state 39
+
+    compound_statement  go to state 40
+
+
+State 37
+
+   12 func_def: func_header LEFT_ROUND_BRACKET formal_param_list • RIGHT_ROUND_BRACKET compound_statement
+   14 formal_param_list: formal_param_list • COMMA formal_param
+
+    COMMA                shift, and go to state 41
+    RIGHT_ROUND_BRACKET  shift, and go to state 45
+
+
+State 38
+
+   11 func_decl: func_header LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET SEMICOLON •
+
+    $default  reduce using rule 11 (func_decl)
+
+
+State 39
+
+   29 compound_statement: LEFT_CURLY_BRACKET • block_items RIGHT_CURLY_BRACKET
+
+    INTEGER             shift, and go to state 1
+    FLOAT               shift, and go to state 2
+    STRING              shift, and go to state 3
+    VOID                shift, and go to state 4
+    BOOL                shift, and go to state 5
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    $default  reduce using rule 33 (block_items)
+
+    var_decl_stmt         go to state 54
+    named_type            go to state 55
+    block_items           go to state 56
+    block_decls           go to state 57
+    block_stmts           go to state 58
+    stmt_block            go to state 59
+    statement             go to state 60
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 40
+
+   13 func_def: func_header LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET compound_statement •
+
+    $default  reduce using rule 13 (func_def)
+
+
+State 41
+
+   14 formal_param_list: formal_param_list COMMA • formal_param
+
+    INTEGER  shift, and go to state 26
+    FLOAT    shift, and go to state 27
+    STRING   shift, and go to state 28
+    BOOL     shift, and go to state 29
+
+    formal_param  go to state 70
+    param_type    go to state 33
+
+
+State 42
+
+   10 func_decl: func_header LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET • SEMICOLON
+   12 func_def: func_header LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET • compound_statement
+
+    SEMICOLON           shift, and go to state 71
+    LEFT_CURLY_BRACKET  shift, and go to state 39
+
+    compound_statement  go to state 72
+
+
+State 43
+
+   16 formal_param: param_type NAME •
+
+    $default  reduce using rule 16 (formal_param)
+
+
+State 44
+
+   22 var_decl_item_list: var_decl_item_list COMMA NAME •
+
+    $default  reduce using rule 22 (var_decl_item_list)
+
+
+State 45
+
+   12 func_def: func_header LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET • compound_statement
+
+    LEFT_CURLY_BRACKET  shift, and go to state 39
+
+    compound_statement  go to state 72
+
+
+State 46
+
+   49 func_call: NAME • LEFT_ROUND_BRACKET actual_arg_list RIGHT_ROUND_BRACKET
+   59 assignment_statement: NAME • ASSIGN_OP expression SEMICOLON
+
+    ASSIGN_OP           shift, and go to state 73
+    LEFT_ROUND_BRACKET  shift, and go to state 74
+
+
+State 47
+
+   57 read_statement: READ • NAME SEMICOLON
+
+    NAME  shift, and go to state 75
+
+
+State 48
+
+   58 print_statement: WRITE • expression SEMICOLON
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 85
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 49
+
+   55 return_statement: RETURN • expression SEMICOLON
+   56                 | RETURN • SEMICOLON
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 95
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 96
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 50
+
+   38 stmt_block: LEFT_CURLY_BRACKET • block_stmts RIGHT_CURLY_BRACKET
+   39           | LEFT_CURLY_BRACKET • RIGHT_CURLY_BRACKET
+
+    NAME                 shift, and go to state 46
+    READ                 shift, and go to state 47
+    WRITE                shift, and go to state 48
+    RETURN               shift, and go to state 49
+    LEFT_CURLY_BRACKET   shift, and go to state 50
+    RIGHT_CURLY_BRACKET  shift, and go to state 97
+    IF                   shift, and go to state 51
+    WHILE                shift, and go to state 52
+    DO                   shift, and go to state 53
+
+    block_stmts           go to state 98
+    stmt_block            go to state 59
+    statement             go to state 60
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 51
+
+   60 if_statement: IF • LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement
+   61             | IF • LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement ELSE statement
+
+    LEFT_ROUND_BRACKET  shift, and go to state 99
+
+
+State 52
+
+   62 while_statement: WHILE • LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement
+
+    LEFT_ROUND_BRACKET  shift, and go to state 100
+
+
+State 53
+
+   63 do_while_statement: DO • statement WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET SEMICOLON
+
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    stmt_block            go to state 59
+    statement             go to state 101
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 54
+
+   35 block_decls: var_decl_stmt •
+
+    $default  reduce using rule 35 (block_decls)
+
+
+State 55
+
+   21 var_decl_stmt: named_type • var_decl_item_list SEMICOLON
+
+    NAME  shift, and go to state 102
+
+    var_decl_item_list  go to state 23
+
+
+State 56
+
+   29 compound_statement: LEFT_CURLY_BRACKET block_items • RIGHT_CURLY_BRACKET
+
+    RIGHT_CURLY_BRACKET  shift, and go to state 103
+
+
+State 57
+
+   30 block_items: block_decls • block_stmts
+   31            | block_decls •
+   34 block_decls: block_decls • var_decl_stmt
+
+    INTEGER             shift, and go to state 1
+    FLOAT               shift, and go to state 2
+    STRING              shift, and go to state 3
+    VOID                shift, and go to state 4
+    BOOL                shift, and go to state 5
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    $default  reduce using rule 31 (block_items)
+
+    var_decl_stmt         go to state 104
+    named_type            go to state 55
+    block_stmts           go to state 105
+    stmt_block            go to state 59
+    statement             go to state 60
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 58
+
+   32 block_items: block_stmts •
+   36 block_stmts: block_stmts • statement
+
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    $default  reduce using rule 32 (block_items)
+
+    stmt_block            go to state 59
+    statement             go to state 106
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 59
+
+   48 statement: stmt_block •
+
+    $default  reduce using rule 48 (statement)
+
+
+State 60
+
+   37 block_stmts: statement •
+
+    $default  reduce using rule 37 (block_stmts)
+
+
+State 61
+
+   54 call_statement: func_call • SEMICOLON
+
+    SEMICOLON  shift, and go to state 107
+
+
+State 62
+
+   47 statement: call_statement •
+
+    $default  reduce using rule 47 (statement)
+
+
+State 63
+
+   46 statement: return_statement •
+
+    $default  reduce using rule 46 (statement)
+
+
+State 64
+
+   41 statement: read_statement •
+
+    $default  reduce using rule 41 (statement)
+
+
+State 65
+
+   42 statement: print_statement •
+
+    $default  reduce using rule 42 (statement)
+
+
+State 66
+
+   40 statement: assignment_statement •
+
+    $default  reduce using rule 40 (statement)
+
+
+State 67
+
+   43 statement: if_statement •
+
+    $default  reduce using rule 43 (statement)
+
+
+State 68
+
+   44 statement: while_statement •
+
+    $default  reduce using rule 44 (statement)
+
+
+State 69
+
+   45 statement: do_while_statement •
+
+    $default  reduce using rule 45 (statement)
+
+
+State 70
+
+   14 formal_param_list: formal_param_list COMMA formal_param •
+
+    $default  reduce using rule 14 (formal_param_list)
+
+
+State 71
+
+   10 func_decl: func_header LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET SEMICOLON •
+
+    $default  reduce using rule 10 (func_decl)
+
+
+State 72
+
+   12 func_def: func_header LEFT_ROUND_BRACKET formal_param_list RIGHT_ROUND_BRACKET compound_statement •
+
+    $default  reduce using rule 12 (func_def)
+
+
+State 73
+
+   59 assignment_statement: NAME ASSIGN_OP • expression SEMICOLON
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 108
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 74
+
+   49 func_call: NAME LEFT_ROUND_BRACKET • actual_arg_list RIGHT_ROUND_BRACKET
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    $default  reduce using rule 51 (actual_arg_list)
+
+    func_call               go to state 84
+    actual_arg_list         go to state 109
+    non_empty_arg_list      go to state 110
+    expression              go to state 111
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 75
+
+   57 read_statement: READ NAME • SEMICOLON
+
+    SEMICOLON  shift, and go to state 112
+
+
+State 76
+
+   49 func_call: NAME • LEFT_ROUND_BRACKET actual_arg_list RIGHT_ROUND_BRACKET
+   88 factor: NAME •
+
+    LEFT_ROUND_BRACKET  shift, and go to state 74
+
+    $default  reduce using rule 88 (factor)
+
+
+State 77
+
+   89 factor: INT_NUM •
+
+    $default  reduce using rule 89 (factor)
+
+
+State 78
+
+   90 factor: FLOAT_NUM •
+
+    $default  reduce using rule 90 (factor)
+
+
+State 79
+
+   91 factor: STR_CONST •
+
+    $default  reduce using rule 91 (factor)
+
+
+State 80
+
+   92 factor: BOOL_CONST •
+
+    $default  reduce using rule 92 (factor)
+
+
+State 81
+
+   94 factor: MINUS • factor
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call  go to state 84
+    factor     go to state 113
+
+
+State 82
+
+   71 not_expression: NOT • not_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call              go to state 84
+    not_expression         go to state 114
+    equality_expression    go to state 90
+    relational_expression  go to state 91
+    additive_expression    go to state 92
+    term                   go to state 93
+    factor                 go to state 94
+
+
+State 83
+
+   93 factor: LEFT_ROUND_BRACKET • expression RIGHT_ROUND_BRACKET
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 115
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 84
+
+   87 factor: func_call •
+
+    $default  reduce using rule 87 (factor)
+
+
+State 85
+
+   58 print_statement: WRITE expression • SEMICOLON
+
+    SEMICOLON  shift, and go to state 116
+
+
+State 86
+
+   64 expression: conditional_expression •
+
+    $default  reduce using rule 64 (expression)
+
+
+State 87
+
+   65 conditional_expression: logical_or_expression •
+   66                       | logical_or_expression • QUESTION_MARK expression COLON conditional_expression
+   67 logical_or_expression: logical_or_expression • OR logical_and_expression
+
+    OR             shift, and go to state 117
+    QUESTION_MARK  shift, and go to state 118
+
+    $default  reduce using rule 65 (conditional_expression)
+
+
+State 88
+
+   68 logical_or_expression: logical_and_expression •
+   69 logical_and_expression: logical_and_expression • AND not_expression
+
+    AND  shift, and go to state 119
+
+    $default  reduce using rule 68 (logical_or_expression)
+
+
+State 89
+
+   70 logical_and_expression: not_expression •
+
+    $default  reduce using rule 70 (logical_and_expression)
+
+
+State 90
+
+   72 not_expression: equality_expression •
+   73 equality_expression: equality_expression • EQUAL relational_expression
+   74                    | equality_expression • NOT_EQUAL relational_expression
+
+    EQUAL      shift, and go to state 120
+    NOT_EQUAL  shift, and go to state 121
+
+    $default  reduce using rule 72 (not_expression)
+
+
+State 91
+
+   75 equality_expression: relational_expression •
+   76 relational_expression: relational_expression • LESS additive_expression
+   77                      | relational_expression • GREATER additive_expression
+   78                      | relational_expression • GREATER_EQUAL additive_expression
+   79                      | relational_expression • LESS_EQUAL additive_expression
+
+    GREATER        shift, and go to state 122
+    GREATER_EQUAL  shift, and go to state 123
+    LESS           shift, and go to state 124
+    LESS_EQUAL     shift, and go to state 125
+
+    $default  reduce using rule 75 (equality_expression)
+
+
+State 92
+
+   80 relational_expression: additive_expression •
+   81 additive_expression: additive_expression • PLUS term
+   82                    | additive_expression • MINUS term
+
+    PLUS   shift, and go to state 126
+    MINUS  shift, and go to state 127
+
+    $default  reduce using rule 80 (relational_expression)
+
+
+State 93
+
+   83 additive_expression: term •
+   84 term: term • MUL factor
+   85     | term • DIV factor
+
+    MUL  shift, and go to state 128
+    DIV  shift, and go to state 129
+
+    $default  reduce using rule 83 (additive_expression)
+
+
+State 94
+
+   86 term: factor •
+
+    $default  reduce using rule 86 (term)
+
+
+State 95
+
+   56 return_statement: RETURN SEMICOLON •
+
+    $default  reduce using rule 56 (return_statement)
+
+
+State 96
+
+   55 return_statement: RETURN expression • SEMICOLON
+
+    SEMICOLON  shift, and go to state 130
+
+
+State 97
+
+   39 stmt_block: LEFT_CURLY_BRACKET RIGHT_CURLY_BRACKET •
+
+    $default  reduce using rule 39 (stmt_block)
+
+
+State 98
+
+   36 block_stmts: block_stmts • statement
+   38 stmt_block: LEFT_CURLY_BRACKET block_stmts • RIGHT_CURLY_BRACKET
+
+    NAME                 shift, and go to state 46
+    READ                 shift, and go to state 47
+    WRITE                shift, and go to state 48
+    RETURN               shift, and go to state 49
+    LEFT_CURLY_BRACKET   shift, and go to state 50
+    RIGHT_CURLY_BRACKET  shift, and go to state 131
+    IF                   shift, and go to state 51
+    WHILE                shift, and go to state 52
+    DO                   shift, and go to state 53
+
+    stmt_block            go to state 59
+    statement             go to state 106
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 99
+
+   60 if_statement: IF LEFT_ROUND_BRACKET • expression RIGHT_ROUND_BRACKET statement
+   61             | IF LEFT_ROUND_BRACKET • expression RIGHT_ROUND_BRACKET statement ELSE statement
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 132
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 100
+
+   62 while_statement: WHILE LEFT_ROUND_BRACKET • expression RIGHT_ROUND_BRACKET statement
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 133
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 101
+
+   63 do_while_statement: DO statement • WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET SEMICOLON
+
+    WHILE  shift, and go to state 134
+
+
+State 102
+
+   23 var_decl_item_list: NAME •
+
+    $default  reduce using rule 23 (var_decl_item_list)
+
+
+State 103
+
+   29 compound_statement: LEFT_CURLY_BRACKET block_items RIGHT_CURLY_BRACKET •
+
+    $default  reduce using rule 29 (compound_statement)
+
+
+State 104
+
+   34 block_decls: block_decls var_decl_stmt •
+
+    $default  reduce using rule 34 (block_decls)
+
+
+State 105
+
+   30 block_items: block_decls block_stmts •
+   36 block_stmts: block_stmts • statement
+
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    $default  reduce using rule 30 (block_items)
+
+    stmt_block            go to state 59
+    statement             go to state 106
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 106
+
+   36 block_stmts: block_stmts statement •
+
+    $default  reduce using rule 36 (block_stmts)
+
+
+State 107
+
+   54 call_statement: func_call SEMICOLON •
+
+    $default  reduce using rule 54 (call_statement)
+
+
+State 108
+
+   59 assignment_statement: NAME ASSIGN_OP expression • SEMICOLON
+
+    SEMICOLON  shift, and go to state 135
+
+
+State 109
+
+   49 func_call: NAME LEFT_ROUND_BRACKET actual_arg_list • RIGHT_ROUND_BRACKET
+
+    RIGHT_ROUND_BRACKET  shift, and go to state 136
+
+
+State 110
+
+   50 actual_arg_list: non_empty_arg_list •
+   52 non_empty_arg_list: non_empty_arg_list • COMMA expression
+
+    COMMA  shift, and go to state 137
+
+    $default  reduce using rule 50 (actual_arg_list)
+
+
+State 111
+
+   53 non_empty_arg_list: expression •
+
+    $default  reduce using rule 53 (non_empty_arg_list)
+
+
+State 112
+
+   57 read_statement: READ NAME SEMICOLON •
+
+    $default  reduce using rule 57 (read_statement)
+
+
+State 113
+
+   94 factor: MINUS factor •
+
+    $default  reduce using rule 94 (factor)
+
+
+State 114
+
+   71 not_expression: NOT not_expression •
+
+    $default  reduce using rule 71 (not_expression)
+
+
+State 115
+
+   93 factor: LEFT_ROUND_BRACKET expression • RIGHT_ROUND_BRACKET
+
+    RIGHT_ROUND_BRACKET  shift, and go to state 138
+
+
+State 116
+
+   58 print_statement: WRITE expression SEMICOLON •
+
+    $default  reduce using rule 58 (print_statement)
+
+
+State 117
+
+   67 logical_or_expression: logical_or_expression OR • logical_and_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    logical_and_expression  go to state 139
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 118
+
+   66 conditional_expression: logical_or_expression QUESTION_MARK • expression COLON conditional_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 140
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 119
+
+   69 logical_and_expression: logical_and_expression AND • not_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call              go to state 84
+    not_expression         go to state 141
+    equality_expression    go to state 90
+    relational_expression  go to state 91
+    additive_expression    go to state 92
+    term                   go to state 93
+    factor                 go to state 94
+
+
+State 120
+
+   73 equality_expression: equality_expression EQUAL • relational_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call              go to state 84
+    relational_expression  go to state 142
+    additive_expression    go to state 92
+    term                   go to state 93
+    factor                 go to state 94
+
+
+State 121
+
+   74 equality_expression: equality_expression NOT_EQUAL • relational_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call              go to state 84
+    relational_expression  go to state 143
+    additive_expression    go to state 92
+    term                   go to state 93
+    factor                 go to state 94
+
+
+State 122
+
+   77 relational_expression: relational_expression GREATER • additive_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call            go to state 84
+    additive_expression  go to state 144
+    term                 go to state 93
+    factor               go to state 94
+
+
+State 123
+
+   78 relational_expression: relational_expression GREATER_EQUAL • additive_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call            go to state 84
+    additive_expression  go to state 145
+    term                 go to state 93
+    factor               go to state 94
+
+
+State 124
+
+   76 relational_expression: relational_expression LESS • additive_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call            go to state 84
+    additive_expression  go to state 146
+    term                 go to state 93
+    factor               go to state 94
+
+
+State 125
+
+   79 relational_expression: relational_expression LESS_EQUAL • additive_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call            go to state 84
+    additive_expression  go to state 147
+    term                 go to state 93
+    factor               go to state 94
+
+
+State 126
+
+   81 additive_expression: additive_expression PLUS • term
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call  go to state 84
+    term       go to state 148
+    factor     go to state 94
+
+
+State 127
+
+   82 additive_expression: additive_expression MINUS • term
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call  go to state 84
+    term       go to state 149
+    factor     go to state 94
+
+
+State 128
+
+   84 term: term MUL • factor
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call  go to state 84
+    factor     go to state 150
+
+
+State 129
+
+   85 term: term DIV • factor
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call  go to state 84
+    factor     go to state 151
+
+
+State 130
+
+   55 return_statement: RETURN expression SEMICOLON •
+
+    $default  reduce using rule 55 (return_statement)
+
+
+State 131
+
+   38 stmt_block: LEFT_CURLY_BRACKET block_stmts RIGHT_CURLY_BRACKET •
+
+    $default  reduce using rule 38 (stmt_block)
+
+
+State 132
+
+   60 if_statement: IF LEFT_ROUND_BRACKET expression • RIGHT_ROUND_BRACKET statement
+   61             | IF LEFT_ROUND_BRACKET expression • RIGHT_ROUND_BRACKET statement ELSE statement
+
+    RIGHT_ROUND_BRACKET  shift, and go to state 152
+
+
+State 133
+
+   62 while_statement: WHILE LEFT_ROUND_BRACKET expression • RIGHT_ROUND_BRACKET statement
+
+    RIGHT_ROUND_BRACKET  shift, and go to state 153
+
+
+State 134
+
+   63 do_while_statement: DO statement WHILE • LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET SEMICOLON
+
+    LEFT_ROUND_BRACKET  shift, and go to state 154
+
+
+State 135
+
+   59 assignment_statement: NAME ASSIGN_OP expression SEMICOLON •
+
+    $default  reduce using rule 59 (assignment_statement)
+
+
+State 136
+
+   49 func_call: NAME LEFT_ROUND_BRACKET actual_arg_list RIGHT_ROUND_BRACKET •
+
+    $default  reduce using rule 49 (func_call)
+
+
+State 137
+
+   52 non_empty_arg_list: non_empty_arg_list COMMA • expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 155
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 138
+
+   93 factor: LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET •
+
+    $default  reduce using rule 93 (factor)
+
+
+State 139
+
+   67 logical_or_expression: logical_or_expression OR logical_and_expression •
+   69 logical_and_expression: logical_and_expression • AND not_expression
+
+    AND  shift, and go to state 119
+
+    $default  reduce using rule 67 (logical_or_expression)
+
+
+State 140
+
+   66 conditional_expression: logical_or_expression QUESTION_MARK expression • COLON conditional_expression
+
+    COLON  shift, and go to state 156
+
+
+State 141
+
+   69 logical_and_expression: logical_and_expression AND not_expression •
+
+    $default  reduce using rule 69 (logical_and_expression)
+
+
+State 142
+
+   73 equality_expression: equality_expression EQUAL relational_expression •
+   76 relational_expression: relational_expression • LESS additive_expression
+   77                      | relational_expression • GREATER additive_expression
+   78                      | relational_expression • GREATER_EQUAL additive_expression
+   79                      | relational_expression • LESS_EQUAL additive_expression
+
+    GREATER        shift, and go to state 122
+    GREATER_EQUAL  shift, and go to state 123
+    LESS           shift, and go to state 124
+    LESS_EQUAL     shift, and go to state 125
+
+    $default  reduce using rule 73 (equality_expression)
+
+
+State 143
+
+   74 equality_expression: equality_expression NOT_EQUAL relational_expression •
+   76 relational_expression: relational_expression • LESS additive_expression
+   77                      | relational_expression • GREATER additive_expression
+   78                      | relational_expression • GREATER_EQUAL additive_expression
+   79                      | relational_expression • LESS_EQUAL additive_expression
+
+    GREATER        shift, and go to state 122
+    GREATER_EQUAL  shift, and go to state 123
+    LESS           shift, and go to state 124
+    LESS_EQUAL     shift, and go to state 125
+
+    $default  reduce using rule 74 (equality_expression)
+
+
+State 144
+
+   77 relational_expression: relational_expression GREATER additive_expression •
+   81 additive_expression: additive_expression • PLUS term
+   82                    | additive_expression • MINUS term
+
+    PLUS   shift, and go to state 126
+    MINUS  shift, and go to state 127
+
+    $default  reduce using rule 77 (relational_expression)
+
+
+State 145
+
+   78 relational_expression: relational_expression GREATER_EQUAL additive_expression •
+   81 additive_expression: additive_expression • PLUS term
+   82                    | additive_expression • MINUS term
+
+    PLUS   shift, and go to state 126
+    MINUS  shift, and go to state 127
+
+    $default  reduce using rule 78 (relational_expression)
+
+
+State 146
+
+   76 relational_expression: relational_expression LESS additive_expression •
+   81 additive_expression: additive_expression • PLUS term
+   82                    | additive_expression • MINUS term
+
+    PLUS   shift, and go to state 126
+    MINUS  shift, and go to state 127
+
+    $default  reduce using rule 76 (relational_expression)
+
+
+State 147
+
+   79 relational_expression: relational_expression LESS_EQUAL additive_expression •
+   81 additive_expression: additive_expression • PLUS term
+   82                    | additive_expression • MINUS term
+
+    PLUS   shift, and go to state 126
+    MINUS  shift, and go to state 127
+
+    $default  reduce using rule 79 (relational_expression)
+
+
+State 148
+
+   81 additive_expression: additive_expression PLUS term •
+   84 term: term • MUL factor
+   85     | term • DIV factor
+
+    MUL  shift, and go to state 128
+    DIV  shift, and go to state 129
+
+    $default  reduce using rule 81 (additive_expression)
+
+
+State 149
+
+   82 additive_expression: additive_expression MINUS term •
+   84 term: term • MUL factor
+   85     | term • DIV factor
+
+    MUL  shift, and go to state 128
+    DIV  shift, and go to state 129
+
+    $default  reduce using rule 82 (additive_expression)
+
+
+State 150
+
+   84 term: term MUL factor •
+
+    $default  reduce using rule 84 (term)
+
+
+State 151
+
+   85 term: term DIV factor •
+
+    $default  reduce using rule 85 (term)
+
+
+State 152
+
+   60 if_statement: IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET • statement
+   61             | IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET • statement ELSE statement
+
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    stmt_block            go to state 59
+    statement             go to state 157
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 153
+
+   62 while_statement: WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET • statement
+
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    stmt_block            go to state 59
+    statement             go to state 158
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 154
+
+   63 do_while_statement: DO statement WHILE LEFT_ROUND_BRACKET • expression RIGHT_ROUND_BRACKET SEMICOLON
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    expression              go to state 159
+    conditional_expression  go to state 86
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 155
+
+   52 non_empty_arg_list: non_empty_arg_list COMMA expression •
+
+    $default  reduce using rule 52 (non_empty_arg_list)
+
+
+State 156
+
+   66 conditional_expression: logical_or_expression QUESTION_MARK expression COLON • conditional_expression
+
+    NAME                shift, and go to state 76
+    INT_NUM             shift, and go to state 77
+    FLOAT_NUM           shift, and go to state 78
+    STR_CONST           shift, and go to state 79
+    BOOL_CONST          shift, and go to state 80
+    MINUS               shift, and go to state 81
+    NOT                 shift, and go to state 82
+    LEFT_ROUND_BRACKET  shift, and go to state 83
+
+    func_call               go to state 84
+    conditional_expression  go to state 160
+    logical_or_expression   go to state 87
+    logical_and_expression  go to state 88
+    not_expression          go to state 89
+    equality_expression     go to state 90
+    relational_expression   go to state 91
+    additive_expression     go to state 92
+    term                    go to state 93
+    factor                  go to state 94
+
+
+State 157
+
+   60 if_statement: IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement •
+   61             | IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement • ELSE statement
+
+    ELSE  shift, and go to state 161
+
+    $default  reduce using rule 60 (if_statement)
+
+
+State 158
+
+   62 while_statement: WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement •
+
+    $default  reduce using rule 62 (while_statement)
+
+
+State 159
+
+   63 do_while_statement: DO statement WHILE LEFT_ROUND_BRACKET expression • RIGHT_ROUND_BRACKET SEMICOLON
+
+    RIGHT_ROUND_BRACKET  shift, and go to state 162
+
+
+State 160
+
+   66 conditional_expression: logical_or_expression QUESTION_MARK expression COLON conditional_expression •
+
+    $default  reduce using rule 66 (conditional_expression)
+
+
+State 161
+
+   61 if_statement: IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement ELSE • statement
+
+    NAME                shift, and go to state 46
+    READ                shift, and go to state 47
+    WRITE               shift, and go to state 48
+    RETURN              shift, and go to state 49
+    LEFT_CURLY_BRACKET  shift, and go to state 50
+    IF                  shift, and go to state 51
+    WHILE               shift, and go to state 52
+    DO                  shift, and go to state 53
+
+    stmt_block            go to state 59
+    statement             go to state 163
+    func_call             go to state 61
+    call_statement        go to state 62
+    return_statement      go to state 63
+    read_statement        go to state 64
+    print_statement       go to state 65
+    assignment_statement  go to state 66
+    if_statement          go to state 67
+    while_statement       go to state 68
+    do_while_statement    go to state 69
+
+
+State 162
+
+   63 do_while_statement: DO statement WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET • SEMICOLON
+
+    SEMICOLON  shift, and go to state 164
+
+
+State 163
+
+   61 if_statement: IF LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET statement ELSE statement •
+
+    $default  reduce using rule 61 (if_statement)
+
+
+State 164
+
+   63 do_while_statement: DO statement WHILE LEFT_ROUND_BRACKET expression RIGHT_ROUND_BRACKET SEMICOLON •
+
+    $default  reduce using rule 63 (do_while_statement)

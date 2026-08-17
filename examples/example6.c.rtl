@@ -1,0 +1,50 @@
+**PROCEDURE
+**BEGIN: RTL Statements
+    iLoad:      v0 <- 0         ;; Loading integer number 0
+    store:      text_ <- v0
+    iLoad:      v0 <- 10        ;; Loading integer number 10
+    store:      loop_ <- v0
+
+  Label2:
+    load:       v0 <- loop_     ;; Loading variable loop_ into register
+    iLoad:      t1 <- 1         ;; Loading integer number 1
+    sgt:        t0 <- v0 , t1
+    not:        v0 <- t0
+    bgtz:       v0 , Label3
+    load:       v0 <- loop_     ;; Loading variable loop_ into register
+    iLoad:      t1 <- 1         ;; Loading integer number 1
+    sub:        t0 <- v0 , t1
+    store:      loop_ <- t0
+    load:       v0 <- loop_     ;; Loading variable loop_ into register
+    iLoad:      t1 <- 0         ;; Loading integer number 0
+    seq:        t0 <- v0 , t1
+    not:        v0 <- t0
+    bgtz:       v0 , Label1
+    iLoad:      v0 <- 1         ;; Loading 1 in v0 to indicate syscall to print integer value
+    load:       a0 <- loop_     ;; Moving the value to be printed into register a0
+    write                       ;; This is where syscall will be made
+    goto:       Label0
+
+  Label1:
+    iLoad:      v0 <- 1         ;; Loading 1 in v0 to indicate syscall to print integer value
+    load:       a0 <- text_     ;; Moving the value to be printed into register a0
+    write                       ;; This is where syscall will be made
+
+  Label0:
+    goto:       Label2
+
+  Label3:
+
+  Label4:
+    load:       v0 <- loop_     ;; Loading variable loop_ into register
+    iLoad:      t1 <- 1         ;; Loading integer number 1
+    add:        t0 <- v0 , t1
+    store:      loop_ <- t0
+    load:       v0 <- loop_     ;; Loading variable loop_ into register
+    iLoad:      t1 <- 10        ;; Loading integer number 10
+    slt:        t0 <- v0 , t1
+    bgtz:       t0 , Label4
+    iLoad:      v0 <- 1         ;; Loading 1 in v0 to indicate syscall to print integer value
+    load:       a0 <- loop_     ;; Moving the value to be printed into register a0
+    write                       ;; This is where syscall will be made
+**END: RTL Statements
